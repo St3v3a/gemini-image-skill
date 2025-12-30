@@ -1,0 +1,40 @@
+# API Keys and Secrets
+.env
+scripts/.env
+
+# Python Virtual Environment
+.venv/
+scripts/.venv/
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# UV
+uv.lock
+
+# Generated Images (optional - uncomment if you don't want to commit generated images)
+# *.png
+# *.jpg
+# *.jpeg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
