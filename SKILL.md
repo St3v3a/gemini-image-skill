@@ -145,29 +145,38 @@ uv run python <skill-dir>/scripts/main.py sunset.png \
 
 **Output:** Creates `sunset.png` in current directory
 
-### Using Bundled Style Template
+### Using Bundled Style Templates
 
 ```bash
+# Purple glass 3D style
 uv run python <skill-dir>/scripts/main.py rocket.png "rocket" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/purple_glass_3d.md
+
+# Neon wireframe style
+uv run python <skill-dir>/scripts/main.py gear.png "gear" \
+  --style <skill-dir>/assets/styles/neon_wireframe.md
+
+# Gold metallic 3D style
+uv run python <skill-dir>/scripts/main.py cube.png "cube" \
+  --style <skill-dir>/assets/styles/gold_metallic_3d.md
 ```
 
 **What happens:**
-- Template loads: `"SOLID BLACK BACKGROUND ONLY. NO gradients... {subject}..."`
-- `{subject}` replaced with: `"rocket"`
+- Template loads with full prompt template
+- `{subject}` placeholder replaced with your subject
 - Full prompt used for generation
 
-**Output:** Blue glass 3D rocket icon with cyan rim lighting on black background
+**Output:** Styled image matching the template aesthetic
 
 ### Batch Processing (Multiple Subjects)
 
 ```bash
 uv run python <skill-dir>/scripts/main.py icon.png \
   "cube" "sphere" "pyramid" "cylinder" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/emerald_glass_3d.md
 ```
 
-**Output:** Creates `icon_1.png`, `icon_2.png`, `icon_3.png`, `icon_4.png`
+**Output:** Creates `icon_1.png`, `icon_2.png`, `icon_3.png`, `icon_4.png` in emerald glass style
 
 ### Image Editing
 
@@ -196,7 +205,7 @@ uv run python <skill-dir>/scripts/main.py gear.png \
 **With bundled examples:**
 ```bash
 uv run python <skill-dir>/scripts/main.py icon.png "CPU chip" \
-  --ref <skill-dir>/assets/styles/examples/1.png
+  --ref <skill-dir>/assets/styles/purple_glass_3d/examples/1.png
 ```
 
 ### Aspect Ratio Selection
@@ -222,9 +231,9 @@ uv run python <skill-dir>/scripts/main.py story.png \
 
 ```bash
 uv run python <skill-dir>/scripts/main.py icon.png "database" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md \
-  --ref <skill-dir>/assets/styles/examples/1.png \
-  --ref <skill-dir>/assets/styles/examples/2.png
+  --style <skill-dir>/assets/styles/amber_glass_3d.md \
+  --ref <skill-dir>/assets/styles/amber_glass_3d/examples/1.png \
+  --ref <skill-dir>/assets/styles/amber_glass_3d/examples/2.png
 ```
 
 **Result:** Highest possible consistency with established style
@@ -233,17 +242,26 @@ uv run python <skill-dir>/scripts/main.py icon.png "database" \
 
 ### Using Bundled Templates
 
-This skill includes the **blue glass 3D** style template:
+This skill includes **8 professional style templates**:
 
+**Glass Styles (3D frosted glass with rim lighting):**
+1. **purple_glass_3d.md** - Royal purple (#7C3AED) glass with violet rim lighting
+2. **emerald_glass_3d.md** - Deep emerald (#059669) glass with lime green rim lighting
+3. **amber_glass_3d.md** - Rich amber (#D97706) glass with golden rim lighting
+4. **blue_glass_3d.md** - Royal blue (#1e3a8a) glass with cyan rim lighting
+
+**Other Styles:**
+5. **neon_wireframe.md** - Hot pink/cyan glowing wireframe outlines on black
+6. **gold_metallic_3d.md** - Brushed gold metal (#D4AF37) with warm highlights
+7. **minimalist_flat.md** - Soft pastel flat 2D design on white background
+8. **gradient_holographic.md** - Iridescent purple-pink-cyan gradients on white
+
+Usage:
 ```bash
---style <skill-dir>/assets/styles/blue_glass_3d.md
+--style <skill-dir>/assets/styles/purple_glass_3d.md
+--style <skill-dir>/assets/styles/neon_wireframe.md
+--style <skill-dir>/assets/styles/minimalist_flat.md
 ```
-
-**Style characteristics:**
-- Frosted royal blue glass (#1e3a8a)
-- Electric cyan (#00D4FF) rim lighting
-- Solid black (#000000) background
-- Premium 3D render aesthetic
 
 ### Creating Custom Templates
 
@@ -278,9 +296,11 @@ Premium photograph of {subject}. Professional studio lighting with soft shadows.
 
 ### Template Path Resolution
 
-**Bundled template:**
+**Bundled templates:**
 ```bash
---style <skill-dir>/assets/styles/blue_glass_3d.md
+--style <skill-dir>/assets/styles/purple_glass_3d.md
+--style <skill-dir>/assets/styles/neon_wireframe.md
+--style <skill-dir>/assets/styles/gold_metallic_3d.md
 ```
 
 **User's custom template:**
@@ -342,15 +362,22 @@ The script:
 
 ### Using Bundled Examples
 
-This skill includes 5 blue glass 3D example images:
+Each style template includes 3 example images for reference consistency:
 
 ```bash
---ref <skill-dir>/assets/styles/examples/1.png
---ref <skill-dir>/assets/styles/examples/2.png
---ref <skill-dir>/assets/styles/examples/3.png
+# Purple glass examples
+--ref <skill-dir>/assets/styles/purple_glass_3d/examples/1.png
+--ref <skill-dir>/assets/styles/purple_glass_3d/examples/2.png
+--ref <skill-dir>/assets/styles/purple_glass_3d/examples/3.png
+
+# Neon wireframe examples
+--ref <skill-dir>/assets/styles/neon_wireframe/examples/1.png
+
+# Gold metallic examples
+--ref <skill-dir>/assets/styles/gold_metallic_3d/examples/1.png
 ```
 
-Use these to maintain consistency with the blue glass style.
+Use these to maintain consistency with your chosen style.
 
 ### Multiple References
 
@@ -359,7 +386,7 @@ uv run python <skill-dir>/scripts/main.py output.png "rocket" \
   --ref example1.png \
   --ref example2.png \
   --ref example3.png \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/gradient_holographic.md
 ```
 
 **Priority:** Earlier references have stronger influence on the output.
@@ -501,7 +528,7 @@ Always tell the user:
 
 **Example response:**
 ```
-I've generated 3 blue glass icons:
+I've generated 3 emerald glass icons:
 - icon_1.png (cube)
 - icon_2.png (sphere)
 - icon_3.png (pyramid)
@@ -518,11 +545,11 @@ Use successful outputs as references for subsequent generations:
 ```bash
 # First generation
 uv run python <skill-dir>/scripts/main.py icon_v1.png "gear" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/purple_glass_3d.md
 
 # If result is good, use it as reference for related icons
 uv run python <skill-dir>/scripts/main.py icon_v2.png "cog" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md \
+  --style <skill-dir>/assets/styles/purple_glass_3d.md \
   --ref icon_v1.png
 ```
 
@@ -530,10 +557,10 @@ uv run python <skill-dir>/scripts/main.py icon_v2.png "cog" \
 
 ```bash
 uv run python <skill-dir>/scripts/main.py output.png "circuit board" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md \
-  --ref <skill-dir>/assets/styles/examples/1.png \
-  --ref <skill-dir>/assets/styles/examples/2.png \
-  --ref <skill-dir>/assets/styles/examples/3.png
+  --style <skill-dir>/assets/styles/neon_wireframe.md \
+  --ref <skill-dir>/assets/styles/neon_wireframe/examples/1.png \
+  --ref <skill-dir>/assets/styles/neon_wireframe/examples/2.png \
+  --ref <skill-dir>/assets/styles/neon_wireframe/examples/3.png
 ```
 
 **Use case:** Maximum consistency for brand-critical assets
@@ -598,12 +625,12 @@ For detailed information, consult the reference files:
 ```bash
 # 1. Basic generation with style
 uv run python <skill-dir>/scripts/main.py icon.png "database" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/purple_glass_3d.md
 
-# 2. Batch generation
+# 2. Batch generation with different style
 uv run python <skill-dir>/scripts/main.py icon.png \
   "cube" "sphere" "pyramid" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md
+  --style <skill-dir>/assets/styles/gold_metallic_3d.md
 
 # 3. Edit existing image
 uv run python <skill-dir>/scripts/main.py edited.png \
@@ -612,12 +639,13 @@ uv run python <skill-dir>/scripts/main.py edited.png \
 
 # 4. With reference for consistency
 uv run python <skill-dir>/scripts/main.py icon.png "gear" \
-  --style <skill-dir>/assets/styles/blue_glass_3d.md \
-  --ref <skill-dir>/assets/styles/examples/1.png
+  --style <skill-dir>/assets/styles/neon_wireframe.md \
+  --ref <skill-dir>/assets/styles/neon_wireframe/examples/1.png
 
-# 5. Custom aspect ratio
+# 5. Custom aspect ratio with flat style
 uv run python <skill-dir>/scripts/main.py thumbnail.png \
   "Tutorial thumbnail with code editor" \
+  --style <skill-dir>/assets/styles/minimalist_flat.md \
   --aspect 16:9
 ```
 
