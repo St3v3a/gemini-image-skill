@@ -2,6 +2,11 @@
 
 A Claude skill for generating and editing professional images using Google's Gemini API (`gemini-3-pro-image-preview`).
 
+<div align="center">
+  <img src="nano_banana_claude_driver_hq.png" alt="Claude Advanced Driver - AI-generated with Gemini" width="600">
+  <p><em>Example: AI-generated image created with this skill</em></p>
+</div>
+
 ## Features
 
 - **Text-to-Image Generation** - Create images from text descriptions
