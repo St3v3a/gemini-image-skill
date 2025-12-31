@@ -312,6 +312,11 @@ def generate_new_image_with_gemini(
 
 
 def main():
+    # Capture the original working directory before any changes
+    # uv sets PWD environment variable to the original directory before --directory changes it
+    # This ensures output files go to the correct location regardless of how uv runs the script
+    original_cwd = Path(os.environ.get('PWD', os.getcwd()))
+
     argument_parser = argparse.ArgumentParser(
         description="Gemini AI Image Generation Engine - Create professional images with style templates",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -357,11 +362,20 @@ Examples:
     )
     argument_parser.add_argument(
         "--aspect", "-a",
-        default="16:9",
+        default=None,
         choices=["1:1", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"],
-        help="Output aspect ratio (default: 16:9 for YouTube/presentations)",
+        help="Output aspect ratio (default: 16:9 for infographics, 1:1 for icons)",
+    )
+    argument_parser.add_argument(
+        "--cwd",
+        default=None,
+        help="Working directory for resolving relative paths (auto-detected from PWD)",
     )
     parsed_args = argument_parser.parse_args()
+
+    # Override original_cwd if explicitly provided
+    if parsed_args.cwd:
+        original_cwd = Path(parsed_args.cwd)
 
     # Load environment variables from .env file (current directory and script directory)
     load_dotenv()
@@ -375,30 +389,57 @@ Examples:
         print("🔑 Obtain API key from: https://aistudio.google.com/apikey")
         return
 
+    # Resolve output path relative to original working directory (where user invoked the command)
+    # This ensures files are saved to the correct location regardless of uv's working directory
     output_file_path = Path(parsed_args.output)
+    if not output_file_path.is_absolute():
+        output_file_path = original_cwd / output_file_path
+    output_file_path = output_file_path.resolve()
     output_file_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Load and parse style template if specified
     loaded_template = None
+    is_infographic_style = False
     if parsed_args.style:
         try:
-            loaded_template = load_gemini_style_template(Path(parsed_args.style))
+            style_path = Path(parsed_args.style)
+            loaded_template = load_gemini_style_template(style_path)
+            # Check if this is an infographic style
+            is_infographic_style = 'infographic' in style_path.stem.lower()
             print(f"📋 Loaded style template from: {parsed_args.style}")
         except (FileNotFoundError, ValueError) as template_error:
             print(f"❌ Error: {template_error}")
             return
+
+    # Determine default aspect ratio based on style type
+    if parsed_args.aspect is None:
+        if is_infographic_style:
+            parsed_args.aspect = "16:9"  # Default for infographics
+        else:
+            parsed_args.aspect = "1:1"  # Default for icons and other styles
 
     # Process prompts and apply style template if provided
     processed_prompts = parsed_args.prompts
     if loaded_template:
         processed_prompts = [apply_subject_to_template(loaded_template, subject) for subject in processed_prompts]
 
-    # Convert reference image paths to Path objects
-    reference_image_paths = [Path(ref) for ref in parsed_args.references] if parsed_args.references else None
+    # Convert reference image paths to Path objects and resolve relative to original cwd
+    reference_image_paths = None
+    if parsed_args.references:
+        reference_image_paths = []
+        for ref in parsed_args.references:
+            ref_path = Path(ref)
+            if not ref_path.is_absolute():
+                ref_path = original_cwd / ref_path
+            reference_image_paths.append(ref_path.resolve())
 
     if parsed_args.edit:
         # Edit mode: modify existing image with AI instructions
         source_image_path = Path(parsed_args.edit)
+        if not source_image_path.is_absolute():
+            source_image_path = original_cwd / source_image_path
+        source_image_path = source_image_path.resolve()
+
         if not source_image_path.exists():
             print(f"❌ Error: Source image not found: {source_image_path}")
             return

@@ -3,20 +3,19 @@
 A Claude skill for generating and editing professional images using Google's Gemini API (`gemini-3-pro-image-preview`).
 
 <div align="center">
-  <img src="nano_banana_claude_driver_hq.png" alt="Claude Advanced Driver - AI-generated with Gemini" width="600">
-  <p><em>Example: AI-generated image created with this skill</em></p>
+  <img src="feature_showcase.png" alt="Gemini Image Gen Feature Showcase" width="100%">
 </div>
 
 ## Features
 
 - **Text-to-Image Generation** - Create images from text descriptions
 - **Image Editing** - Modify existing images with text instructions
-- **Style Templates** - Apply consistent styling using markdown templates
+- **7 Professional Style Templates** - 3 glass styles, 4 other creative styles
 - **Reference Images** - Use up to 14 reference images for style/composition guidance
 - **Batch Processing** - Generate multiple variations in one command
 - **8 Aspect Ratios** - 1:1, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
 - **Auto-Install Dependencies** - First run automatically installs required packages
-- **Bundled Blue Glass 3D Style** - Production-ready style template with examples
+- **Cross-Platform** - Works seamlessly on Windows, macOS, Linux, and WSL2
 
 ## Quick Start
 
@@ -71,20 +70,20 @@ uv run python main.py output.png "A vibrant sunset over mountains"
 uv run python main.py output.png "A simple 3D cube on black background" --aspect 1:1
 ```
 
-### Blue Glass 3D Style (Bundled Template)
+### Purple Glass 3D Style (Bundled Template)
 
 ```bash
 uv run python main.py rocket.png "rocket" \
-  --style ../assets/styles/blue_glass_3d.md
+  --style ../assets/styles/purple_glass_3d.md
 ```
 
-**Result:** Frosted royal blue glass (#1e3a8a) with electric cyan (#00D4FF) rim lighting on solid black background
+**Result:** Frosted royal purple glass with rim lighting on solid black background
 
 ### Batch Processing (Multiple Icons)
 
 ```bash
 uv run python main.py icon.png "cube" "sphere" "pyramid" \
-  --style ../assets/styles/blue_glass_3d.md \
+  --style ../assets/styles/purple_glass_3d.md \
   --aspect 1:1
 ```
 
@@ -94,9 +93,9 @@ uv run python main.py icon.png "cube" "sphere" "pyramid" \
 
 ```bash
 uv run python main.py database.png "database" \
-  --style ../assets/styles/blue_glass_3d.md \
-  --ref ../assets/styles/examples/1.png \
-  --ref ../assets/styles/examples/2.png
+  --style ../assets/styles/purple_glass_3d.md \
+  --ref ../assets/styles/purple_glass_3d/examples/1.png \
+  --ref ../assets/styles/purple_glass_3d/examples/2.png
 ```
 
 ### Edit Existing Image
@@ -132,7 +131,7 @@ Options:
   --style, -s   Path to style template .md file
   --edit, -e    Edit existing image instead of generating
   --ref, -r     Reference image (repeatable, up to 14 total)
-  --aspect, -a  Aspect ratio (default: 16:9)
+  --aspect, -a  Aspect ratio (default: 1:1)
                 1:1, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
 ```
 
@@ -151,20 +150,24 @@ Options:
 
 ## Style Templates
 
-### Using the Bundled Template
+### Using the Bundled Templates
 
-The skill includes a production-ready **blue glass 3D** style:
+The skill includes 7 professional style templates:
+
+**Glass Styles (3D Icons):**
+- `purple_glass_3d.md` - Royal purple frosted glass
+- `emerald_glass_3d.md` - Deep emerald glass
+- `amber_glass_3d.md` - Rich amber glass
+
+**Other Styles:**
+- `neon_wireframe.md` - Hot pink/cyan neon on black
+- `gold_metallic_3d.md` - Brushed gold metal
+- `minimalist_flat.md` - Soft pastel flat design
+- `gradient_holographic.md` - Iridescent gradients
 
 ```bash
---style <skill-dir>/assets/styles/blue_glass_3d.md
+--style <skill-dir>/assets/styles/purple_glass_3d.md
 ```
-
-**Characteristics:**
-- Thick frosted royal blue glass (#1e3a8a)
-- Sharp electric cyan (#00D4FF) rim lighting on top edges
-- Soft internal volumetric glow
-- Minimal mirrored reflection beneath objects
-- Pure solid black background (#000000)
 
 ### Creating Custom Templates
 
@@ -259,6 +262,76 @@ uv run python main.py output.png "subject" \
 3. **Set up environment variables** - More secure than .env files
 4. **Rotate API keys periodically** - Security best practice
 
+## Cross-Platform Compatibility
+
+This skill works seamlessly across all major platforms with automatic path resolution and environment handling.
+
+### Supported Platforms
+
+- ✅ **Linux** (Ubuntu, Debian, Fedora, Arch, etc.)
+- ✅ **macOS** (Intel and Apple Silicon)
+- ✅ **Windows 10/11** (PowerShell and Command Prompt)
+- ✅ **WSL2** (Windows Subsystem for Linux)
+
+### Path Handling
+
+The skill automatically handles path differences across platforms:
+
+```bash
+# Windows
+uv run --directory .claude/skills/gemini-image-gen/scripts python main.py images\output.png "prompt"
+
+# Linux/macOS
+uv run --directory .claude/skills/gemini-image-gen/scripts python main.py images/output.png "prompt"
+```
+
+**Both work correctly!** The script resolves all paths relative to your current working directory.
+
+### Platform-Specific Notes
+
+**Windows:**
+- Use PowerShell (recommended) or Command Prompt
+- If you encounter permission errors, run: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+- Forward slashes (/) in paths work fine on Windows
+
+**macOS:**
+- Both Intel and Apple Silicon (M1/M2/M3) supported
+- Install uv via Homebrew: `brew install uv`
+
+**WSL2:**
+- Works exactly like native Linux
+- Can access Windows files via `/mnt/c/`
+
+### Virtual Environment Location
+
+The `uv` tool creates a `.venv` directory in the scripts folder:
+- **Location:** `.claude/skills/gemini-image-gen/scripts/.venv`
+- **Managed automatically** - No manual activation needed
+- **Platform-specific** - Different for each OS but transparent to you
+
+### Output Files
+
+**Important:** When using `--directory` with uv, always include `--cwd "$(pwd)"` to ensure correct path resolution:
+
+```bash
+# Correct usage - files save to project root/images/
+cd /home/user/myproject
+uv run --directory .claude/skills/gemini-image-gen/scripts python main.py \
+  images/output.png "..." \
+  --cwd "$(pwd)"
+
+# Output goes to: /home/user/myproject/images/output.png ✅
+```
+
+**Windows PowerShell:**
+```powershell
+uv run --directory .claude/skills/gemini-image-gen/scripts python main.py `
+  images/output.png "..." `
+  --cwd "$PWD"
+```
+
+The `--cwd` parameter ensures files are saved relative to your current directory, not the scripts directory. This works consistently across Linux, macOS, Windows, and WSL2.
+
 ## Troubleshooting
 
 ### Dependencies Won't Install
@@ -328,7 +401,7 @@ python --version  # Check current version
 
 ```bash
 uv run python main.py icon.png "gear" \
-  --style ../assets/styles/blue_glass_3d.md \
+  --style ../assets/styles/purple_glass_3d.md \
   --ref ../assets/styles/examples/1.png \
   --ref ../assets/styles/examples/2.png \
   --ref ../assets/styles/examples/3.png
@@ -340,11 +413,11 @@ Combines style template + multiple reference images for highest possible consist
 
 ```bash
 # First generation
-uv run python main.py v1.png "rocket" --style blue_glass_3d.md
+uv run python main.py v1.png "rocket" --style purple_glass_3d.md
 
 # If good, use as reference for related icon
 uv run python main.py v2.png "spaceship" \
-  --style blue_glass_3d.md \
+  --style purple_glass_3d.md \
   --ref v1.png
 ```
 
@@ -354,7 +427,7 @@ uv run python main.py v2.png "spaceship" \
 # 1. Generate foreground on solid black
 uv run python main.py foreground.png \
   "Icon set on solid black (#000000)" \
-  --style blue_glass_3d.md
+  --style purple_glass_3d.md
 
 # 2. Generate gradient background separately
 uv run python main.py background.png \
@@ -376,7 +449,7 @@ gemini-image-gen/
 │   └── .env                     # Your API key (create this)
 ├── assets/
 │   └── styles/
-│       ├── blue_glass_3d.md    # Bundled style template
+│       ├── purple_glass_3d.md    # Bundled style template
 │       └── examples/            # 5 reference images
 │           ├── 1.png
 │           ├── 2.png
@@ -442,7 +515,7 @@ For issues, questions, or feature requests:
 uv run python main.py output.png "your prompt" --aspect 16:9
 
 # With style template
-uv run python main.py output.png "subject" --style ../assets/styles/blue_glass_3d.md
+uv run python main.py output.png "subject" --style ../assets/styles/purple_glass_3d.md
 
 # Batch processing
 uv run python main.py icon.png "cube" "sphere" "pyramid" --style template.md

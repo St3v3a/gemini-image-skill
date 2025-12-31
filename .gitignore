@@ -1,32 +1,18 @@
-# API Keys and Secrets
-.env
-scripts/.env
-
-# Python Virtual Environment
-.venv/
-scripts/.venv/
-venv/
-env/
-
-# Python Cache
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
 
-# UV
-uv.lock
-
-# Generated Images (optional - uncomment if you don't want to commit generated images)
-# *.png
-# *.jpg
-# *.jpeg
+# Environment Variables
+.env
 
 # IDE
 .vscode/
@@ -38,3 +24,12 @@ uv.lock
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated Images (keep examples)
+scripts/images/
+*.png
+!assets/styles/*/examples/*.png
+
+# UV
+.uv/
+uv.lock

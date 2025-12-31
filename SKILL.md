@@ -1,6 +1,6 @@
 ---
 name: gemini-image-gen
-description: Generate and edit images using Google's Gemini API (gemini-3-pro-image-preview model). Use when users request (1) Generating images from text prompts, (2) Editing existing images with AI instructions, (3) Creating images with specific styles or templates, (4) Generating multiple variations of images, (5) Creating images with reference images for style consistency, (6) Any image generation task mentioning Gemini, Google AI, or requiring professional image output. Supports aspect ratios (1:1, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9), style templates, reference images (up to 14), and batch processing.
+description: Generate and edit images using Google's Gemini API (gemini-3-pro-image-preview model). Use when users request (1) Generating images from text prompts, (2) Editing existing images with AI instructions, (3) Creating images with specific styles or templates, (4) Generating multiple variations of images, (5) Creating images with reference images for style consistency, (6) Any image generation task mentioning Gemini, Google AI, or requiring professional image output. Supports aspect ratios (1:1, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9), 7 style templates (3 glass styles, 4 other creative styles), reference images (up to 14), and batch processing.
 ---
 
 # Gemini Image Generation Skill
@@ -111,14 +111,16 @@ uv run python <skill-dir>/scripts/main.py <output> <prompts...> [OPTIONS]
 ```
 
 **Arguments:**
-- `<output>` - Output file path (e.g., `output.png`, `images/icon.png`)
+- `<output>` - Output file path (e.g., `images/output.png`, `images/icon.png`)
 - `<prompts...>` - One or more subject prompts
+
+**Default Output Location:** Images are saved to `images/` folder in the project root
 
 **Options:**
 - `--style <path>` or `-s` - Path to style template `.md` file
 - `--edit <path>` or `-e` - Edit existing image instead of generating
 - `--ref <path>` or `-r` - Reference image (repeatable, up to 14 total)
-- `--aspect <ratio>` or `-a` - Aspect ratio (default: 16:9)
+- `--aspect <ratio>` or `-a` - Aspect ratio (default: 1:1)
 
 ### Decision Tree: Generate vs Edit
 
@@ -138,26 +140,26 @@ uv run python <skill-dir>/scripts/main.py <output> <prompts...> [OPTIONS]
 ### Basic Generation
 
 ```bash
-uv run python <skill-dir>/scripts/main.py sunset.png \
+uv run python <skill-dir>/scripts/main.py images/sunset.png \
   "A vibrant sunset over mountain peaks with orange and purple sky" \
   --aspect 16:9
 ```
 
-**Output:** Creates `sunset.png` in current directory
+**Output:** Creates `images/sunset.png` in project root
 
 ### Using Bundled Style Templates
 
 ```bash
 # Purple glass 3D style
-uv run python <skill-dir>/scripts/main.py rocket.png "rocket" \
+uv run python <skill-dir>/scripts/main.py images/rocket.png "rocket" \
   --style <skill-dir>/assets/styles/purple_glass_3d.md
 
 # Neon wireframe style
-uv run python <skill-dir>/scripts/main.py gear.png "gear" \
+uv run python <skill-dir>/scripts/main.py images/gear.png "gear" \
   --style <skill-dir>/assets/styles/neon_wireframe.md
 
 # Gold metallic 3D style
-uv run python <skill-dir>/scripts/main.py cube.png "cube" \
+uv run python <skill-dir>/scripts/main.py images/cube.png "cube" \
   --style <skill-dir>/assets/styles/gold_metallic_3d.md
 ```
 
@@ -166,17 +168,17 @@ uv run python <skill-dir>/scripts/main.py cube.png "cube" \
 - `{subject}` placeholder replaced with your subject
 - Full prompt used for generation
 
-**Output:** Styled image matching the template aesthetic
+**Output:** Styled image matching the template aesthetic in `images/` folder
 
 ### Batch Processing (Multiple Subjects)
 
 ```bash
-uv run python <skill-dir>/scripts/main.py icon.png \
+uv run python <skill-dir>/scripts/main.py images/icon.png \
   "cube" "sphere" "pyramid" "cylinder" \
   --style <skill-dir>/assets/styles/emerald_glass_3d.md
 ```
 
-**Output:** Creates `icon_1.png`, `icon_2.png`, `icon_3.png`, `icon_4.png` in emerald glass style
+**Output:** Creates `images/icon_1.png`, `images/icon_2.png`, `images/icon_3.png`, `images/icon_4.png` in emerald glass style
 
 ### Image Editing
 
@@ -210,6 +212,8 @@ uv run python <skill-dir>/scripts/main.py icon.png "CPU chip" \
 
 ### Aspect Ratio Selection
 
+**Note:** The default aspect ratio is **1:1** (square). Specify `--aspect` to use a different ratio.
+
 ```bash
 # YouTube thumbnail
 uv run python <skill-dir>/scripts/main.py thumbnail.png \
@@ -242,25 +246,24 @@ uv run python <skill-dir>/scripts/main.py icon.png "database" \
 
 ### Using Bundled Templates
 
-This skill includes **8 professional style templates**:
+This skill includes **14 professional style templates**:
 
 **Glass Styles (3D frosted glass with rim lighting):**
 1. **purple_glass_3d.md** - Royal purple (#7C3AED) glass with violet rim lighting
 2. **emerald_glass_3d.md** - Deep emerald (#059669) glass with lime green rim lighting
 3. **amber_glass_3d.md** - Rich amber (#D97706) glass with golden rim lighting
-4. **blue_glass_3d.md** - Royal blue (#1e3a8a) glass with cyan rim lighting
 
 **Other Styles:**
-5. **neon_wireframe.md** - Hot pink/cyan glowing wireframe outlines on black
-6. **gold_metallic_3d.md** - Brushed gold metal (#D4AF37) with warm highlights
-7. **minimalist_flat.md** - Soft pastel flat 2D design on white background
-8. **gradient_holographic.md** - Iridescent purple-pink-cyan gradients on white
+4. **neon_wireframe.md** - Hot pink/cyan glowing wireframe outlines on black
+5. **gold_metallic_3d.md** - Brushed gold metal (#D4AF37) with warm highlights
+6. **minimalist_flat.md** - Soft pastel flat 2D design on white background
+7. **gradient_holographic.md** - Iridescent purple-pink-cyan gradients on white
 
 Usage:
 ```bash
 --style <skill-dir>/assets/styles/purple_glass_3d.md
 --style <skill-dir>/assets/styles/neon_wireframe.md
---style <skill-dir>/assets/styles/minimalist_flat.md
+--style <skill-dir>/assets/styles/gold_metallic_3d.md
 ```
 
 ### Creating Custom Templates
@@ -484,10 +487,10 @@ requires-python = >=3.10
 
 ### Output Path Handling
 
-**Relative paths** (relative to user's current working directory):
+**Default output location:**
 ```bash
-output.png          → ./output.png
-images/icon.png     → ./images/icon.png (creates directory)
+images/output.png      → ./images/output.png
+images/icon.png        → ./images/icon.png
 ```
 
 **Absolute paths:**
@@ -495,28 +498,28 @@ images/icon.png     → ./images/icon.png (creates directory)
 /home/user/projects/output.png → Exact location specified
 ```
 
-**Directory creation:** The script automatically creates parent directories if they don't exist.
+**Directory creation:** The script automatically creates the `images/` directory and any parent directories if they don't exist.
 
 ### Batch Processing Outputs
 
 **Single subject → Single file:**
 ```bash
 # Input
-uv run python <skill-dir>/scripts/main.py output.png "cube"
+uv run python <skill-dir>/scripts/main.py images/output.png "cube"
 
 # Output
-output.png
+images/output.png
 ```
 
 **Multiple subjects → Numbered files:**
 ```bash
 # Input
-uv run python <skill-dir>/scripts/main.py icon.png "cube" "sphere" "pyramid"
+uv run python <skill-dir>/scripts/main.py images/icon.png "cube" "sphere" "pyramid"
 
 # Output
-icon_1.png (cube)
-icon_2.png (sphere)
-icon_3.png (pyramid)
+images/icon_1.png (cube)
+images/icon_2.png (sphere)
+images/icon_3.png (pyramid)
 ```
 
 ### Informing the User
@@ -529,11 +532,11 @@ Always tell the user:
 **Example response:**
 ```
 I've generated 3 emerald glass icons:
-- icon_1.png (cube)
-- icon_2.png (sphere)
-- icon_3.png (pyramid)
+- images/icon_1.png (cube)
+- images/icon_2.png (sphere)
+- images/icon_3.png (pyramid)
 
-All files are in your current directory.
+All files are in the images/ folder.
 ```
 
 ## Advanced Usage
@@ -609,6 +612,8 @@ For detailed information, consult the reference files:
 | 16:9 | YouTube, presentations, monitors | Thumbnails, slides |
 | 21:9 | Ultra-wide, cinematic | YouTube banners, headers |
 
+**Default aspect ratio:** 1:1 (square)
+
 **Decision making:**
 - **YouTube thumbnail?** → 16:9
 - **Instagram post?** → 1:1 or 4:5
@@ -624,26 +629,26 @@ For detailed information, consult the reference files:
 
 ```bash
 # 1. Basic generation with style
-uv run python <skill-dir>/scripts/main.py icon.png "database" \
+uv run python <skill-dir>/scripts/main.py images/icon.png "database" \
   --style <skill-dir>/assets/styles/purple_glass_3d.md
 
 # 2. Batch generation with different style
-uv run python <skill-dir>/scripts/main.py icon.png \
+uv run python <skill-dir>/scripts/main.py images/icon.png \
   "cube" "sphere" "pyramid" \
   --style <skill-dir>/assets/styles/gold_metallic_3d.md
 
 # 3. Edit existing image
-uv run python <skill-dir>/scripts/main.py edited.png \
+uv run python <skill-dir>/scripts/main.py images/edited.png \
   "Change background to white" \
-  --edit original.png
+  --edit images/original.png
 
 # 4. With reference for consistency
-uv run python <skill-dir>/scripts/main.py icon.png "gear" \
+uv run python <skill-dir>/scripts/main.py images/icon.png "gear" \
   --style <skill-dir>/assets/styles/neon_wireframe.md \
   --ref <skill-dir>/assets/styles/neon_wireframe/examples/1.png
 
 # 5. Custom aspect ratio with flat style
-uv run python <skill-dir>/scripts/main.py thumbnail.png \
+uv run python <skill-dir>/scripts/main.py images/thumbnail.png \
   "Tutorial thumbnail with code editor" \
   --style <skill-dir>/assets/styles/minimalist_flat.md \
   --aspect 16:9
